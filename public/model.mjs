@@ -39,7 +39,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 const auth = getAuth(app);
 
-window.addEventListener("focusin", function () {
+window.addEventListener("change", function () {
   if (
     !window.localStorage.getItem("state") &&
     window.location.pathname !== "/"
@@ -90,6 +90,7 @@ const checkIfUser = async function (email) {
 //user sign in
 const userSignInWithEmail = async function (email, password) {
   if (!email && !password) return;
+
   checkIfUser(email).then((data) => {
     if (data === `isUser`) {
       signInWithEmailAndPassword(auth, email, password)
@@ -97,6 +98,8 @@ const userSignInWithEmail = async function (email, password) {
           if (userCredentials.user.emailVerified === false) {
             alert("The email id is not verified please verify your email");
           } else {
+            document.querySelector(".loader").classList.add("hidden");
+            document.querySelector(".overlay").classList.add("hidden");
             window.location.pathname = "/home.html";
             window.localStorage.setItem("state", "home");
           }
@@ -107,6 +110,8 @@ const userSignInWithEmail = async function (email, password) {
         });
     } else {
       alert(`you are not a user create an account `);
+      document.querySelector(".loader").classList.add("hidden");
+      document.querySelector(".overlay").classList.add("hidden");
     }
   });
 };
@@ -122,8 +127,8 @@ const userSignout = function () {
 
 const autoLogin = async function () {
   const email = auth.currentUser.email;
-  console.log(window.localStorage.getItem("state"));
-
+  document.querySelector(".loader").classList.remove("hidden");
+  document.querySelector(".overlay").classList.remove("hidden");
   getPassword(auth.currentUser.uid).then((password) => {
     if (password) {
       userSignInWithEmail(email, password);
@@ -148,10 +153,6 @@ setPersistence(auth, browserLocalPersistence)
   .catch((error) => {
     console.log(error);
   });
-
-onAuthStateChanged(auth, (user) => {
-  console.log(user);
-});
 
 const getPassword = async function (uid) {
   let holder;

@@ -8,9 +8,11 @@ const tooltipUser = document.querySelector(".tooltip-user");
 const tooltipPass = document.querySelector(".tooltip-pass");
 const signUPGG = document.querySelector(".signup-gg");
 const signupBtn = document.querySelector(".signup");
+const overlay = document.querySelector(".overlay");
+const spinner = document.querySelector(".loader");
 loginId.focus();
-// login id validation
 
+// login id validation
 const validRegexUser =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/;
 loginId.addEventListener("keyup", function () {
@@ -70,6 +72,7 @@ loginBtn.addEventListener("click", function (e) {
   e.preventDefault();
   if (loginId.value === "" || password.value === "")
     alert("need credentials to login");
+
   userSignInWithEmail(loginId.value, password.value);
 });
 
